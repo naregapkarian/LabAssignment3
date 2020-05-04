@@ -5,6 +5,7 @@ interface IStudent {
   firstName:string;
   lastName:string;
   course:string;
+  editMode: boolean;
 }
 @Component({
   selector: 'main-content',
@@ -13,48 +14,62 @@ interface IStudent {
 })
 export class MainContentComponent implements OnInit {
 
+  studentArray: Array<IStudent> = [];
+  disableAddButton = false;
+  constructor() { }
   
-  students: Array<IStudent> = [];
-  
-  constructor() {
-    this.students[0] = {
+  ngOnInit()  {
+    this.studentArray = [
+      {
       id: 1,
       firstName: 'Nareg',
       lastName: 'Apkarian',
       course: 'Programming',
-    }
-    this.students[1] = {
-      id: 1,
+      editMode: false,
+    },
+    {
+      id: 2,
       firstName: 'Tom',
       lastName: 'Brady',
       course: 'Football',
-    }
-    this.students[2] = {
-      id: 1,
+      editMode: false,
+    },
+    {
+      id: 3,
       firstName: 'Mark',
       lastName: 'Zuc',
       course: 'Business',
-      
+      editMode: false,
     }
-    this.students[3] = {
-      id: 1,
-      firstName: 'Joe',
-      lastName: 'Biden',
-      course: 'Politics',
-      
-    }
-  }
-  ngOnInit(): void {
-  }
+    ];
+
+}
 
   addStudent() {
-    const student: IStudent = {
-      id: 1,
-      firstName: 'Mike',
-      lastName: 'Tyson',
-      course: 'Boxing',
-    }
-    this.students.push(student);
+    this.studentArray.unshift({    
+        id: null,
+        firstName: null,
+        lastName: null,
+        course: null,
+        editMode: true,
+      });
+      this.disableAddButton = true;
+  }
+  removeStudent(index: number) {
+    this.studentArray.splice(index, 1);
   }
 
+  saveStudent() {
+    this.studentArray[0].editMode = false;
+    this.disableAddButton = false;
+
+    this.sort('asc');
+  }
+
+  sort(direction: string) {
+   
+    this.studentArray.sort((a: IStudent, b: IStudent) => {
+      return a.id < b.id ? -1 : 1;
+    });
+  }
 }
